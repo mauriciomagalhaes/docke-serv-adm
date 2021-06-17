@@ -20,7 +20,8 @@ services:
 
   app:
     #container_name: app_nextcloud
-    image: nextcloud:apache
+    #image: nextcloud:apache
+    build: ./nextcloud
     restart: always
     volumes:
       - nextcloud:/var/www/html
