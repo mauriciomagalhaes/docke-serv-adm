@@ -89,7 +89,7 @@ services:
       - 10051:10051
     environment: 
       - DB_SERVER_HOST=db
-      - MYSQL_ROOT_PASSWORD=Msyql@2021
+      - MYSQL_ROOT_PASSWORD=Mysql@2021
       - ZBX_STARTPOLLERS=5
     env_file: 
       - zbx.env
