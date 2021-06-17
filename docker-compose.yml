@@ -2,6 +2,7 @@ version: '3'
 
 services:
   db:
+    container_name: mariadb
     image: mariadb
     command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
     restart: always
@@ -17,6 +18,7 @@ services:
     restart: always
 
   app:
+    container_name: app_nextcloud
     image: nextcloud:apache
     restart: always
     volumes:
@@ -37,6 +39,7 @@ services:
       - default
 
   cron:
+    container_name: app_cron
     image: nextcloud:apache
     restart: always
     volumes:
@@ -47,6 +50,7 @@ services:
       - redis
 
   proxy:
+    container_name: proxy_http
     build: ./proxy
     restart: always
     ports:
@@ -63,6 +67,7 @@ services:
       - proxy-tier
 
   letsencrypt-companion:
+    container_name: app_letsencrypt
     image: jrcs/letsencrypt-nginx-proxy-companion
     restart: always
     volumes:
@@ -76,6 +81,7 @@ services:
       - proxy
       
   zbx-server:
+    container_name: zbx-server
     image: zabbix/zabbix-server-mysql:ol-5.0-latest
     restart: always
     ports: 
@@ -94,6 +100,7 @@ services:
       - db
 
   zbx-front: 
+    container_name: zbx-fronend
     image: zabbix/zabbix-web-apache-mysql:ol-5.0-latest
     restart: always
     ports:
@@ -112,6 +119,7 @@ services:
       - db
 
   glpi:
+    container_name: app_glpi
     image: diouxx/glpi
     container_name : glpi
     hostname: glpi
