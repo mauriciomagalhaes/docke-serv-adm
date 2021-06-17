@@ -10,7 +10,7 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=Mysql@2021
     env_file:
-      - db.env
+      - envs/db.env
 
   redis:
     image: redis:alpine
@@ -28,7 +28,7 @@ services:
       - MYSQL_HOST=db
       - REDIS_HOST=redis
     env_file:
-      - db.env
+      - envs/db.env
     depends_on:
       - db
       - redis
@@ -85,7 +85,7 @@ services:
       - MYSQL_ROOT_PASSWORD=Msyql@2021
       - ZBX_STARTPOLLERS=5
     env_file: 
-      - zbx.env
+      - envs/zbx.env
     depends_on: 
       - db
     volumes:
@@ -105,7 +105,7 @@ services:
       - ZBX_SERVER_HOST=zbx-server
       - DB_SERVER_HOST=db
     env_file: 
-      - zbx.env
+      - envs/zbx.env
     depends_on: 
       - db
     links: 
@@ -126,7 +126,7 @@ services:
       - TIMEZONE=America/Bahia
     restart: always
     env_file: 
-      - glpi.env
+      - envs/glpi.env
     links: 
       - db
 
