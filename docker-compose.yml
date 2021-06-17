@@ -144,6 +144,10 @@ services:
     ports: 
       - "3000:3000"
     restart: always
+    volumes: 
+      - /home/mauricio/docker/grafana/data:/var/lib/grafana
+    environment: 
+      - GF_INSTALL_PLUGINS=alexanderzobnin-zabbix-app
 
 volumes:
   db:
