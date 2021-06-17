@@ -11,9 +11,10 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=Mysql@2021
     env_file:
-      - envs/db.env
+      - db.env
 
   redis:
+    container_name: app_redis
     image: redis:alpine
     restart: always
 
@@ -30,7 +31,7 @@ services:
       - MYSQL_HOST=db
       - REDIS_HOST=redis
     env_file:
-      - envs/db.env
+      - db.env
     depends_on:
       - db
       - redis
@@ -91,16 +92,16 @@ services:
       - MYSQL_ROOT_PASSWORD=Msyql@2021
       - ZBX_STARTPOLLERS=5
     env_file: 
-      - envs/zbx.env
+      - zbx.env
     depends_on: 
       - db
     volumes:
-        - '/etc/zabbix/alertscripts:/usr/lib/zabbix/alertscripts'
+      - '/etc/zabbix/alertscripts:/usr/lib/zabbix/alertscripts'
     links: 
       - db
-
+    
   zbx-front: 
-    container_name: zbx-fronend
+    container_name: zbx-frontend
     image: zabbix/zabbix-web-apache-mysql:ol-5.0-latest
     restart: always
     ports:
@@ -112,7 +113,7 @@ services:
       - ZBX_SERVER_HOST=zbx-server
       - DB_SERVER_HOST=db
     env_file: 
-      - envs/zbx.env
+      - zbx.env
     depends_on: 
       - db
     links: 
@@ -121,7 +122,6 @@ services:
   glpi:
     container_name: app_glpi
     image: diouxx/glpi
-    container_name : glpi
     hostname: glpi
     ports:
       - "81:80"
@@ -134,7 +134,7 @@ services:
       - TIMEZONE=America/Bahia
     restart: always
     env_file: 
-      - envs/glpi.env
+      - glpi.env
     links: 
       - db
   
@@ -144,8 +144,6 @@ services:
     ports: 
       - "3000:3000"
     restart: always
-    links: 
-      - db
 
 volumes:
   db:
