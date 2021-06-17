@@ -123,8 +123,8 @@ services:
     image: diouxx/glpi
     container_name : glpi
     hostname: glpi
-    #ports:
-    #  - "81:80"
+    ports:
+      - "81:80"
     volumes:
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
