@@ -119,8 +119,11 @@ services:
       - zbx.env
     depends_on: 
       - db
-    links: 
-      - db
+    #links: 
+    #  - db
+    networks:
+      - proxy-tier
+      - default
 
   glpi:
     #container_name: app_glpi
@@ -141,8 +144,11 @@ services:
     restart: always
     env_file: 
       - glpi.env
-    links: 
-      - db
+    #links: 
+    #  - db
+    networks:
+      - proxy-tier
+      - default
   
   grafana:
     #container_name: app_grafana
@@ -157,6 +163,9 @@ services:
       - LETSENCRYPT_HOST=localhost
       - LETSENCRYPT_EMAIL=localhost
       - GF_INSTALL_PLUGINS=alexanderzobnin-zabbix-app
+    networks:
+      - proxy-tier
+      - default
 
 volumes:
   db:
