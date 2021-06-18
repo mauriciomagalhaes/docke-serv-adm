@@ -69,7 +69,8 @@ services:
 
   letsencrypt-companion:
     #container_name: app_letsencrypt
-    image: jrcs/letsencrypt-nginx-proxy-companion
+    #image: jrcs/letsencrypt-nginx-proxy-companion
+    build: ./letsencrypt
     restart: always
     volumes:
       - certs:/etc/nginx/certs
