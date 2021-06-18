@@ -162,6 +162,7 @@ services:
       - /home/mauricio/docker/grafana/data:/var/lib/grafana
     environment:
       - VIRTUAL_HOST=grafana.domain.com
+      - VIRTUAL_PORT=3000
       - LETSENCRYPT_HOST=grafana.domain.com
       - LETSENCRYPT_EMAIL=contact@domain.com
       - GF_INSTALL_PLUGINS=alexanderzobnin-zabbix-app
