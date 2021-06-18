@@ -1,5 +1,5 @@
 # docke-servadm
-Docker Serviços Administrativos
+Docker Serviços Admins 
 
 Serviços:
 - Letscript
