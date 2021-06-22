@@ -147,13 +147,13 @@ services:
     #ports:
     #  - "81:80"
     volumes:
-      - VIRTUAL_HOST=suport.domain.com
-      - LETSENCRYPT_HOST=suport.domain.com
-      - LETSENCRYPT_EMAIL=contact@domain.com
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
       - /var/www/html/glpi/:/var/www/html/glpi
     environment:
+      - VIRTUAL_HOST=suport.domain.com
+      - LETSENCRYPT_HOST=suport.domain.com
+      - LETSENCRYPT_EMAIL=contact@domain.com
       - MYSQL_ROOT_PASSWORD=Mysql@2021
       - TIMEZONE=America/Bahia
     restart: always
@@ -164,7 +164,24 @@ services:
     networks:
       - proxy-tier
       - default
-  
+
+  pbs:
+    image: ayufan/proxmox-backup-server:latest
+    hostname: pbs-server
+    ports:
+      - 8007:8007
+    volumes: 
+      - /etc/proxmox-backup:/etc/proxmox-backup
+      - /var/log/proxmox-backup:/var/log/proxmox-backup
+      - /var/lib/proxmox-backup:/var/lib/proxmox-backup
+    #environment:
+      #- VIRTUAL_HOST=pbs.domain.com
+      #- VIRTUAL_PORT=8007
+      #- LETSENCRYPT_HOST=pbs.domain.com
+      #- LETSENCRYPT_EMAIL=contact@domain.com
+    networks:
+      default
+
   grafana:
     #container_name: app_grafana
     image: grafana/grafana
