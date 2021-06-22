@@ -8,6 +8,3 @@ Docker Serviços Admins
 - Zabbix Agent 5.0 latest LTS
 - Nextcloud
 - Glpi
-
-
- 
