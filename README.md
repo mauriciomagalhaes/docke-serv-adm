@@ -5,6 +5,7 @@ Docker Serviços Admins
 - Letscript
 - Grafana
 - Zabbix 5.0.X LTS
+- Zabbix Agent
 - Nextcloud
 - Glpi
 
