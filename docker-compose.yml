@@ -127,6 +127,19 @@ services:
       - proxy-tier
       - default
 
+  zbx-agent:
+    image: zabbix/zabbix-agent:ol-5.0-latest
+    restart: always
+    environment: 
+      - ZBX_HOSTNAME=zbx-agent-docker
+      - ZBX_SERVER_HOST=zbx-server
+    depends_on:
+      - zbx-server
+    volumes: 
+      - /etc/zabbix/zabbix_agent.d:/etc/zabbix/zabbix_agentd.d
+    networks:
+      - default
+
   glpi:
     #container_name: app_glpi
     image: diouxx/glpi
