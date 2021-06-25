@@ -2,7 +2,7 @@
 Docker Serviços Admins 
 
 # Serviços:
-- Nginx proxy https with Letsencript
+- Nginx proxy https with Letsencrypt
     - Grafana
     - Zabbix 5.0 latest LTS
         - zabbix Server 5.0 latest LTS
