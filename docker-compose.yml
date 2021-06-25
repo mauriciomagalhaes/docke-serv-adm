@@ -256,7 +256,7 @@ volumes:
   certs:
   vhost.d:
   html:
-  graylog_data:
+  graylog:
 
 networks:
   proxy-tier:
