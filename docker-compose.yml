@@ -128,6 +128,19 @@ services:
       - proxy-tier
       - default
 
+  zbx-agent:
+    image: zabbix/zabbix-agent:ol-5.0-latest
+    restart: always
+    environment: 
+      - ZBX_HOSTNAME=zbx-agent-docker
+      - ZBX_SERVER_HOST=zbx-server
+    depends_on:
+      - zbx-server
+    volumes: 
+      - /etc/zabbix/zabbix_agent.d:/etc/zabbix/zabbix_agentd.d
+    networks:
+      - default
+
   glpi:
     #container_name: app_glpi
     image: diouxx/glpi
@@ -152,7 +165,24 @@ services:
     networks:
       - proxy-tier
       - default
-  
+
+  pbs:
+    image: ayufan/proxmox-backup-server:latest
+    hostname: pbs-server
+    ports:
+      - 8007:8007
+    volumes: 
+      - /etc/proxmox-backup:/etc/proxmox-backup
+      - /var/log/proxmox-backup:/var/log/proxmox-backup
+      - /var/lib/proxmox-backup:/var/lib/proxmox-backup
+    #environment:
+      #- VIRTUAL_HOST=pbs.domain.com
+      #- VIRTUAL_PORT=8007
+      #- LETSENCRYPT_HOST=pbs.domain.com
+      #- LETSENCRYPT_EMAIL=contact@domain.com
+    networks:
+      default
+
   grafana:
     #container_name: app_grafana
     image: grafana/grafana
