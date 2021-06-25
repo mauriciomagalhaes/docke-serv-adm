@@ -3,18 +3,18 @@ Docker Serviços Admins
 
 # Serviços:
 - Nginx proxy https with Letsencrypt
+    - Glpi
     - Grafana
+    - Graylog
+        - Graylog Web/API
+        - Elastcsearch
+        - Mongodb
+    - Nextcloud
     - Zabbix 5.0 latest LTS
         - zabbix Server 5.0 latest LTS
         - Zabbix Agent 5.0 latest LTS
         - Zabbix Web 5.0 latest LTS
-    - Nextcloud
-    - Glpi
-    - Graylog
-        - Mongodb
-        - Elastcsearch
-        - Graylog Web/API
-        
+
 # Criar diretorios e direitos
 
 # ELASTICSEARCH
