@@ -178,14 +178,17 @@ services:
     image: graylog/graylog:4.1    
     restart: always    
     environment:
-      - VIRTUAL_HOST=logs.ctsnetworks.com.br      
+      - VIRTUAL_HOST=logs.domain.com     
       - VIRTUAL_PORT=9000
-      - LETSENCRYPT_HOST=logs.ctsnetworks.com.br      
-      - LETSENCRYPT_EMAIL=suporte@t3tecnologia.com.br      
-      - GRAYLOG_PASSWORD_SECRET=graylog@2021@agora
+      - LETSENCRYPT_HOST=logs.domains.com      
+      - LETSENCRYPT_EMAIL=contact@domain.com
+      # Pass with 16 digits     
+      - GRAYLOG_PASSWORD_SECRET=senha@2021@agoravai
+      # Password Admin
+      # echo -n password | shasum -a 256
       - GRAYLOG_ROOT_PASSWORD_SHA2=498d052d06f5fc8247d1964bd8257448c1dec61e8304ab6b2f62290beb3eb500      
       - GRAYLOG_HTTP_EXTERNAL_URI=https://logs.ctsnetworks.com.br/
-#     - GRAYLOG_WEB_ENDPOINT_URI=http://graylog:9000/api    
+#     - GRAYLOG_WEB_ENDPOINT_URI=http://logs.ctsnetworks.com.br/api    
     entrypoint: /usr/bin/tini -- wait-for-it elasticsearch:9200 --  /docker-entrypoint.sh
     volumes:           
       - graylog:/usr/share/graylog/data/journal
