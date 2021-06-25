@@ -9,6 +9,7 @@ Docker Serviços Admins
         - Graylog Web/API
         - Elasticsearch
         - Mongodb
+    - MariaDB
     - Nextcloud
     - Zabbix 5.0 latest LTS
         - zabbix Server 5.0 latest LTS
