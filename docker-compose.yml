@@ -117,6 +117,7 @@ services:
       - MYSQL_ROOT_PASSWORD=Mysql@2021
       - PHP_TZ=America/Bahia
       - ZBX_SERVER_HOST=zbx-server
+      - ZBX_SERVER_NAME=Empresa
     env_file: 
       - zbx.env
     depends_on: 
@@ -134,13 +135,13 @@ services:
     #ports:
     #  - "81:80"
     volumes:
-      - VIRTUAL_HOST=suport.domain.com
-      - LETSENCRYPT_HOST=suport.domain.com
-      - LETSENCRYPT_EMAIL=contact@domain.com
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
       - /var/www/html/glpi/:/var/www/html/glpi
     environment:
+      - VIRTUAL_HOST=suport.domain.com
+      - LETSENCRYPT_HOST=suport.domain.com
+      - LETSENCRYPT_EMAIL=contact@domain.com
       - MYSQL_ROOT_PASSWORD=Mysql@2021
       - TIMEZONE=America/Bahia
     restart: always
