@@ -2,7 +2,7 @@
 Docker Serviços Admins 
 
 # Serviços:
-- Nginx proxy https with Letsencrypt
+- Nginx proxy https with letsencrypt
     - Glpi
     - Grafana
     - Graylog
