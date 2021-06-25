@@ -199,8 +199,7 @@ services:
       - GRAYLOG_HTTP_EXTERNAL_URI=https://logs.ctsnetworks.com.br/
 #     - GRAYLOG_WEB_ENDPOINT_URI=http://graylog:9000/api    
     entrypoint: /usr/bin/tini -- wait-for-it elasticsearch:9200 --  /docker-entrypoint.sh
-    volumes:      
-#     - /var/docker/graylog/data:/usr/share/graylog/data/journal      
+    volumes:           
       - graylog:/usr/share/graylog/data/journal
       - /var/docker/graylog/plugin:/usr/share/graylog/plugin    
     ports:      
