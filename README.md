@@ -13,9 +13,8 @@ Docker Serviços Admins
     - Graylog
         - Mongodb
         - Elastcsearch
-
-
-
+        - Graylog Web/API
+        
 # Criar diretorios e direitos
 
 # ELASTICSEARCH
