@@ -6,7 +6,9 @@ Docker Serviços Admins
 - Letsencript
 - Grafana
 - Zabbix 5.0 latest LTS
-- Zabbix Agent 5.0 latest LTS
+    - zabbix Server 5.0 latest LTS
+    - Zabbix Agent 5.0 latest LTS
+    - Zabbix Web 5.0 latest LTS
 - Nextcloud
 - Glpi
 - Graylog
