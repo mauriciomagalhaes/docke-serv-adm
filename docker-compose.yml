@@ -215,6 +215,7 @@ services:
       - VIRTUAL_PORT=3000
       - LETSENCRYPT_HOST=grafana.domain.com
       - LETSENCRYPT_EMAIL=contact@domain.com
+      # Plugin Zabbix
       - GF_INSTALL_PLUGINS=alexanderzobnin-zabbix-app
     networks:
       - proxy-tier
