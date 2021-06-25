@@ -2,7 +2,6 @@ version: '3'
 
 services:
   db:
-    #container_name: mariadb
     image: mariadb
     command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
     restart: always
@@ -14,12 +13,11 @@ services:
       - db.env
 
   redis:
-    #container_name: app_redis
     image: redis:alpine
     restart: always
 
+# NEXTCLOUD
   app:
-    #container_name: app_nextcloud
     build: ./nextcloud
     restart: always
     volumes:
@@ -40,7 +38,6 @@ services:
       - default
 
   cron:
-    #container_name: app_cron
     image: nextcloud:apache
     restart: always
     volumes:
@@ -50,8 +47,8 @@ services:
       - db
       - redis
 
+# NGNIX HTTP PROXY
   proxy:
-    #container_name: proxy_http
     build: ./proxy
     restart: always
     ports:
@@ -67,9 +64,8 @@ services:
     networks:
       - proxy-tier
 
+# LETSENCRIPT
   letsencrypt-companion:
-    #container_name: app_letsencrypt
-    #image: jrcs/letsencrypt-nginx-proxy-companion
     build: ./letsencrypt
     restart: always
     volumes:
@@ -81,9 +77,9 @@ services:
       - proxy-tier
     depends_on:
       - proxy
-      
+
+# ZABBIX
   zbx-server:
-    #container_name: zbx-server
     image: zabbix/zabbix-server-mysql:ol-5.0-latest
     restart: always
     ports: 
@@ -100,10 +96,8 @@ services:
       - '/etc/zabbix/alertscripts:/usr/lib/zabbix/alertscripts'
     links: 
       - db
-
-# ZABBIX    
+   
   zbx-front: 
-    #container_name: zbx-frontend
     image: zabbix/zabbix-web-apache-mysql:ol-5.0-latest
     restart: always
     #ports:
@@ -123,8 +117,6 @@ services:
       - zbx.env
     depends_on: 
       - db
-    #links: 
-    #  - db
     networks:
       - proxy-tier
       - default
@@ -142,12 +134,10 @@ services:
     networks:
       - default
 
+#GLPI
   glpi:
-    #container_name: app_glpi
     image: diouxx/glpi
     hostname: glpi
-    #ports:
-    #  - "81:80"
     volumes:
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
@@ -161,8 +151,6 @@ services:
     restart: always
     env_file: 
       - glpi.env
-    #links: 
-    #  - db
     networks:
       - proxy-tier
       - default
@@ -213,7 +201,22 @@ services:
     networks:      
       - proxy-tier
       - default
-    
+
+  grafana:
+    image: grafana/grafana
+    restart: always
+    volumes: 
+      - /home/mauricio/docker/grafana/data:/var/lib/grafana
+    environment:
+      - VIRTUAL_HOST=grafana.domain.com
+      - VIRTUAL_PORT=3000
+      - LETSENCRYPT_HOST=grafana.domain.com
+      - LETSENCRYPT_EMAIL=contact@domain.com
+      - GF_INSTALL_PLUGINS=alexanderzobnin-zabbix-app
+    networks:
+      - proxy-tier
+      - default
+       
   #pbs:
   #  image: ayufan/proxmox-backup-server:latest
   #  hostname: pbs-server
@@ -230,25 +233,6 @@ services:
       #- LETSENCRYPT_EMAIL=contact@domain.com
   #  networks:
   #    default
-
-  grafana:
-    #container_name: app_grafana
-    image: grafana/grafana
-    #ports: 
-    #  - "3000:3000"
-    restart: always
-    volumes: 
-      - /home/mauricio/docker/grafana/data:/var/lib/grafana
-    environment:
-      - VIRTUAL_HOST=grafana.domain.com
-      - VIRTUAL_PORT=3000
-      - LETSENCRYPT_HOST=grafana.domain.com
-      - LETSENCRYPT_EMAIL=contact@domain.com
-      - GF_INSTALL_PLUGINS=alexanderzobnin-zabbix-app
-    networks:
-      - proxy-tier
-      - default
-
 volumes:
   db:
   nextcloud:
