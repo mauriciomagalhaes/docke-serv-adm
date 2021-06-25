@@ -15,7 +15,7 @@ Docker Serviços Admins
         - Zabbix Agent 5.0 latest LTS
         - Zabbix Web 5.0 latest LTS
 
-# Criar diretorios e direitos
+# Criar diretorios e direitos:
 
 # ELASTICSEARCH
     # sudo mkdir -p /var/docker/graylog/elasticsearch/data
