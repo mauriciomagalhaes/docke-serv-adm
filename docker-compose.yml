@@ -100,7 +100,8 @@ services:
       - '/etc/zabbix/alertscripts:/usr/lib/zabbix/alertscripts'
     links: 
       - db
-    
+
+# ZABBIX    
   zbx-front: 
     #container_name: zbx-frontend
     image: zabbix/zabbix-web-apache-mysql:ol-5.0-latest
@@ -166,6 +167,54 @@ services:
       - proxy-tier
       - default
 
+# GRAYLOG
+  mongo:
+    image: mongo:4.2
+    restart: always
+    volumes:
+      - /var/docker/graylog/mongo/data:/data/db
+
+  elasticsearch:
+    image:  docker.elastic.co/elasticsearch/elasticsearch:7.13.1
+    restart: always
+    environment:
+      - http.host=0.0.0.0
+      - transport.host=localhost
+#     - network.host=0.0.0.0
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m      
+      - discovery.type=single-node    
+    volumes:
+      - /var/docker/graylog/elasticsearch/data:/usr/share/elasticsearch/data  
+  
+  graylog:
+    image: graylog/graylog:4.1    
+    restart: always    
+    environment:
+      - VIRTUAL_HOST=logs.ctsnetworks.com.br      
+      - VIRTUAL_PORT=9000
+      - LETSENCRYPT_HOST=logs.ctsnetworks.com.br      
+      - LETSENCRYPT_EMAIL=suporte@t3tecnologia.com.br      
+      - GRAYLOG_PASSWORD_SECRET=graylog@2021@agora
+      - GRAYLOG_ROOT_PASSWORD_SHA2=498d052d06f5fc8247d1964bd8257448c1dec61e8304ab6b2f62290beb3eb500      
+      - GRAYLOG_HTTP_EXTERNAL_URI=https://logs.ctsnetworks.com.br/
+#     - GRAYLOG_WEB_ENDPOINT_URI=http://graylog:9000/api    
+    entrypoint: /usr/bin/tini -- wait-for-it elasticsearch:9200 --  /docker-entrypoint.sh
+    volumes:      
+#     - /var/docker/graylog/data:/usr/share/graylog/data/journal      
+      - graylog:/usr/share/graylog/data/journal
+      - /var/docker/graylog/plugin:/usr/share/graylog/plugin    
+    ports:      
+      - 1514:1514        # SYSLOG TCP
+      - 1514:1514/udp    # SYSLOG UDP
+      - 12201:12201      # GELF   TCP
+      - 12201:12201/udp  # GELP   UDP  
+    links:      
+      - mongo
+      - elasticsearch    
+    networks:      
+      - proxy-tier
+      - default
+    
   #pbs:
   #  image: ayufan/proxmox-backup-server:latest
   #  hostname: pbs-server
@@ -207,6 +256,7 @@ volumes:
   certs:
   vhost.d:
   html:
+  graylog_data:
 
 networks:
   proxy-tier:
