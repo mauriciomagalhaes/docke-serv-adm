@@ -172,6 +172,8 @@ services:
       - ES_JAVA_OPTS=-Xms512m -Xmx512m      
       - discovery.type=single-node    
     volumes:
+      # sudo mkdir -p /var/docker/graylog/elasticsearch/data
+      # chmod 777 /var/docker/graylog/elasticsearch/data
       - /var/docker/graylog/elasticsearch/data:/usr/share/elasticsearch/data  
   
   graylog:
@@ -208,8 +210,11 @@ services:
   grafana:
     image: grafana/grafana
     restart: always
-    volumes: 
-      - /home/mauricio/docker/grafana/data:/var/lib/grafana
+    volumes:
+      # sudo mkdir -p /var/docker/grafana/data
+      # sudo chown -R 472:472 /var/docker/grafana/data
+      # sudo chmod -R 775 /var/docker/grafana
+      - /var/docker/grafana/data:/var/lib/grafana
     environment:
       - VIRTUAL_HOST=grafana.domain.com
       - VIRTUAL_PORT=3000
