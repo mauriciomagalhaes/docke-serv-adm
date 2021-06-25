@@ -12,3 +12,13 @@ Docker Serviços Admins
     - Mongodb
     - Elastcsearch
     - Graylog
+
+# Criar diretorios e direitos
+
+    # ELASTICSEARCH
+        - sudo mkdir -p /var/docker/graylog/elasticsearch/data
+        - sudo chmod 777 /var/docker/graylog/elasticsearch/data
+
+    # GRAFANA
+        - sudo chown -R 472:472 /var/docker/grafana/data
+        - sudo chmod -R 775 /var/docker/grafana
