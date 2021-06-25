@@ -7,7 +7,7 @@ Docker Serviços Admins
     - Grafana
     - Graylog
         - Graylog Web/API
-        - Elastcsearch
+        - Elasticsearch
         - Mongodb
     - Nextcloud
     - Zabbix 5.0 latest LTS
