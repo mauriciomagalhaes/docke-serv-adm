@@ -17,7 +17,7 @@ services:
     restart: always
 
 # NEXTCLOUD
-  app:
+  nextcloud:
     build: ./nextcloud
     restart: always
     volumes:
