@@ -37,6 +37,26 @@ services:
       - proxy-tier
       - default
 
+  # COLLABORA
+  collabora:    image: collabora/code
+    restart: always
+    #ports:
+    #  - 9980:9980
+    environment:
+#      - username=admin
+#      - password=agoravai@2020
+#      - extra_params=--o:ssl.enable=false
+      - VIRTUAL_HOST=office.domains.com
+      - VIRTUAL_NETWORK=proxy
+      - VIRTUAL_PORT=9980
+      - VIRTUAL_PROTO=https
+      - LETSENCRYPT_HOST=office.domains.com
+      - LETSENCRYPT_EMAIL=contato@domains.com
+      - dictionaries=pt_BR
+      - domain=office.domains.com
+    networks:
+      - proxy-tier
+
   cron:
     image: nextcloud:apache
     restart: always
