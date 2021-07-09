@@ -11,6 +11,7 @@ Docker Serviços Admins
         - Mongodb v4.2
     - MariaDB latest
     - Nextcloud latest
+        - Collabora latest
     - Zabbix 5.0 LTS
         - zabbix Server 5.0 latest LTS
         - Zabbix Agent 5.0 latest LTS
