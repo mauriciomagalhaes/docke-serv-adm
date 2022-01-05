@@ -39,7 +39,8 @@ services:
       - default
 
 # COLLABORA
-  collabora:    image: collabora/code
+  collabora:    
+    image: collabora/code
     restart: always
 #   ports:
 #     - 9980:9980
@@ -384,6 +385,8 @@ services:
     #ports:
     #  - "9080:80"
     volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
       - ./bootstrap:/app/bootstrap
     depends_on:
       psql:
