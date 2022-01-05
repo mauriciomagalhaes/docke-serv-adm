@@ -389,10 +389,9 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - ./bootstrap:/app/bootstrap
     depends_on:
-      psql:
-        condition: service_healthy
-      grafana:
-        condition: service_healthy
+      - psql
+      - grafana
+  
   psql:
     container_name: db
     image: postgres:11-alpine
