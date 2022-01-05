@@ -393,7 +393,7 @@ services:
       - grafana
   
   psql:
-    container_name: db
+    container_name: psql
     image: postgres:11-alpine
     restart: always
     environment:
