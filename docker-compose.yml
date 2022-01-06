@@ -52,8 +52,8 @@ services:
       - VIRTUAL_NETWORK=proxy
       - VIRTUAL_PORT=9980
       - VIRTUAL_PROTO=https
-      - LETSENCRYPT_HOST=office.domains.com
-      - LETSENCRYPT_EMAIL=contato@domains.com
+      - LETSENCRYPT_HOST=office.domain.com
+      - LETSENCRYPT_EMAIL=contato@domain.com
       - dictionaries=pt_BR
       - domain=office.domains.com
     networks:
@@ -117,6 +117,9 @@ services:
       - db
     volumes:
       - '/etc/zabbix/alertscripts:/usr/lib/zabbix/alertscripts'
+      - '/etc/zabbix/externalscripts:/usr/lib/zabbix/externalscripts'
+      - '/etc/zabbix/modules:/usr/lib/zabbix/modules'
+      - '/var/lib/snmp/mibs/ietf:/usr/share/snmp/mibs'
     links: 
       - db
 
@@ -257,7 +260,8 @@ services:
       - default
     labels:
       org.label-schema.group: "monitoring"
-### 
+
+### SIP MONITORING ### 
   prometheus:
     image: prom/prometheus:latest
     container_name: prometheus
@@ -347,7 +351,7 @@ services:
       - "HEPLIFYSERVER_HEPTCPADDR=0.0.0.0:9061"
       - "HEPLIFYSERVER_DBSHEMA=homer7"
       - "HEPLIFYSERVER_DBDRIVER=postgres"
-      - "HEPLIFYSERVER_DBADDR=db:5432"
+      - "HEPLIFYSERVER_DBADDR=psql:5432"
       - "HEPLIFYSERVER_DBUSER=root"
       - "HEPLIFYSERVER_DBPASS=homerSeven"
       - "HEPLIFYSERVER_DBDATATABLE=homer_data"
