@@ -2,13 +2,9 @@
 Docker Serviços Admins 
 
 # Serviços:
-- Nginx proxy https with letsencrypt
+- Nginx proxy manager
     - Glpi latest
     - Grafana latest
-    - Graylog 
-        - Graylog Web/API v4.1
-        - Elasticsearch v7.13.1
-        - Mongodb v4.2
     - MariaDB latest
     - Nextcloud latest
         - Collabora latest
@@ -16,6 +12,19 @@ Docker Serviços Admins
         - zabbix Server 5.0 latest LTS
         - Zabbix Agent 5.0 latest LTS
         - Zabbix Web 5.0 latest LTS
+    - Grafana
+        - Prometeus latest
+        - Alertmanager latest
+        - Node Exporter latest
+        - Loki
+    - Heplify-server
+        - Homer-webapp
+    - PostgreSQL 11-alpine
+    - Remotely
+    - Meshcenter
+    - Portainer
+    - Homer-dashboard
+
 
 # Criar diretorios e direitos:
 
