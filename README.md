@@ -3,7 +3,7 @@ Docker Serviços Admins
 
 # Serviços:
 - Nginx proxy manager
-    - Glpi latest #GLPI
+    - Glpi latest                           #GLPI
     - Grafana latest
     - MariaDB latest
     - Nextcloud latest
