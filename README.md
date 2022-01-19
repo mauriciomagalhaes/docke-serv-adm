@@ -3,9 +3,8 @@ Docker Serviços Admins
 
 # Serviços:
 - Nginx proxy manager
-    - Glpi latest                           #GLPI
-    - Grafana latest
-    - MariaDB latest
+    - Glpi latest                           # Sistema de Suporte Tickets
+    - MariaDB latest                        # Banco de Dados MariaDB
     - Nextcloud latest
         - Collabora latest
     - Zabbix 5.0 LTS
