@@ -144,7 +144,7 @@ services:
     networks:
       - proxy-tier
       - default
-      
+
   grafana:
     image: grafana/grafana
     restart: always
@@ -342,8 +342,8 @@ services:
     image: einar/meshcentral
     container_name: meshcentral
     restart: always
- #   ports:
- #     - 8086:443 
+    #ports:
+    #- 8086:443 
     environment:
       - HOSTNAME=remote.ctsnetworks.com.br
       - REVERSE_PROXY=pxymng     
