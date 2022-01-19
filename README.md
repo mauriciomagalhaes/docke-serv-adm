@@ -2,34 +2,30 @@
 Docker Serviços Admins 
 
 # Serviços:
-- Nginx proxy manager
+- Nginx proxy manager                       # Servidor de administração proxy http
     - Glpi latest                           # Sistema de Suporte Tickets
     - MariaDB latest                        # Banco de Dados MariaDB
-    - Nextcloud latest
+    - Nextcloud latest                      # Sistema de Cloud, armazenamento e comp. de arquivos
         - Collabora latest
-    - Zabbix 5.0 LTS
-        - zabbix Server 5.0 latest LTS
-        - Zabbix Agent 5.0 latest LTS
-        - Zabbix Web 5.0 latest LTS
-    - Grafana
-        - Prometeus latest
+    - Zabbix 5.0 LTS                        # Monitoramento de serviços
+        - zabbix Server 5.0 latest LTS      # Zabbix Server
+        - Zabbix Agent 5.0 latest LTS       # Zabbix Agent
+        - Zabbix Web 5.0 latest LTS         # Zabbix Web
+    - Grafana                               # Dashboards
+        - Prometeus latest                  
         - Alertmanager latest
         - Node Exporter latest
         - Loki
-    - Heplify-server
-        - Homer-webapp
-    - PostgreSQL 11-alpine
-    - Remotely
-    - Meshcenter
-    - Portainer
-    - Homer-dashboard
+    - Heplify-server                        # Monitoramento SIP
+        - Homer-webapp                      # Monitoramento SIP Dashboard
+    - PostgreSQL 11-alpine                  # Banco de dados Postgresql
+    - Remotely                              # Sistema de acesso remoto via ID (Anydesk)
+    - Meshcenter                            # Sistema de acesso remoto via Agente
+    - Portainer                             # Administrador de Dockers
+    - Homer-dashboard                       # Dashboard de Serviços
 
 
 # Criar diretorios e direitos:
-
-# ELASTICSEARCH:
-    # sudo mkdir -p /var/docker/graylog/elasticsearch/data
-    # sudo chmod 777 /var/docker/graylog/elasticsearch/data
     
 # GRAFANA:
     # sudo chown -R 472:472 /var/docker/grafana/data
