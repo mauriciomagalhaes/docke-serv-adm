@@ -4,6 +4,7 @@ services:
 # MARIADB
   db:
     image: mariadb
+    container_name: mariadb
     command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
     restart: always
     volumes:
@@ -15,18 +16,17 @@ services:
 
   redis:
     image: redis:alpine
+    container_name: redis
     restart: always
 
 # NEXTCLOUD
   nextcloud:
     build: ./nextcloud
+    container_name: nextcloud
     restart: always
     volumes:
       - /var/www-docker/nextcloud:/var/www/html
     environment:
-      - VIRTUAL_HOST=drive.domain.com
-      - LETSENCRYPT_HOST=drive.domain.com
-      - LETSENCRYPT_EMAIL=contact@domain.com
       - MYSQL_HOST=db
       - REDIS_HOST=redis
     env_file:
@@ -41,6 +41,7 @@ services:
 # COLLABORA
   collabora:    
     image: collabora/code
+    container_name: collabora
     restart: always
 #   ports:
 #     - 9980:9980
@@ -48,20 +49,15 @@ services:
 #     - username=admin
 #     - password=agoravai@2020
 #     - extra_params=--o:ssl.enable=false
-      - VIRTUAL_HOST=office.domains.com
-      - VIRTUAL_NETWORK=proxy
-      - VIRTUAL_PORT=9980
-      - VIRTUAL_PROTO=https
-      - LETSENCRYPT_HOST=office.domain.com
-      - LETSENCRYPT_EMAIL=contato@domain.com
       - dictionaries=pt_BR
-      - domain=office.domains.com
+      - domain=office.ctsnetworks.com.br
     networks:
       - proxy-tier
 
 #CRON
   cron:
     image: nextcloud:apache
+    container_name: cron
     restart: always
     volumes:
       - /var/www-docker/nextcloud:/var/www/html
@@ -70,40 +66,10 @@ services:
       - db
       - redis
 
-# NGNIX HTTP PROXY
-  proxy:
-    build: ./proxy
-    restart: always
-    ports:
-      - 80:80
-      - 443:443
-    labels:
-      com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy: "true"
-    volumes:
-      - certs:/etc/nginx/certs:ro
-      - vhost.d:/etc/nginx/vhost.d
-      - html:/usr/share/nginx/html
-      - /var/run/docker.sock:/tmp/docker.sock:ro
-    networks:
-      - proxy-tier
-
-# LETSENCRIPT
-  letsencrypt-companion:
-    build: ./letsencrypt
-    restart: always
-    volumes:
-      - certs:/etc/nginx/certs
-      - vhost.d:/etc/nginx/vhost.d
-      - html:/usr/share/nginx/html
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-    networks:
-      - proxy-tier
-    depends_on:
-      - proxy
-
 # ZABBIX-SERVER
   zbx-server:
     image: zabbix/zabbix-server-mysql:ol-5.0-latest
+    container_name: zbx-server
     restart: always
     ports: 
       - 10051:10051
@@ -126,20 +92,17 @@ services:
 # ZABBIX-FRONTEND 
   zbx-front: 
     image: zabbix/zabbix-web-apache-mysql:ol-5.0-latest
+    container_name: zbx-front
     restart: always
 #   ports:
 #     - 8080:8080
 #     - 8443:8443
     environment:
-      - VIRTUAL_HOST=zabbix.domain.com
-      - VIRTUAL_PORT=8080 
-      - LETSENCRYPT_HOST=zabbix.domain.com
-      - LETSENCRYPT_EMAIL=contact@domain.com
       - DB_SERVER_HOST=db
       - MYSQL_ROOT_PASSWORD=Mysql@2021
       - PHP_TZ=America/Bahia
       - ZBX_SERVER_HOST=zbx-server
-      - ZBX_SERVER_NAME=Empresa
+      - ZBX_SERVER_NAME=T3telecom
     env_file: 
       - zbx.env
     depends_on: 
@@ -151,6 +114,7 @@ services:
 # ZABBIX-AGENT
   zbx-agent:
     image: zabbix/zabbix-agent:ol-5.0-latest
+    container_name: zbx-agent
     restart: always
     environment: 
       - ZBX_HOSTNAME=zbx-agent-docker
@@ -165,16 +129,13 @@ services:
 # GLPI
   glpi:
     image: diouxx/glpi
+    container_name: glpi
     hostname: glpi
     volumes:
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
       - /var/www-docker/glpi:/var/www/html/glpi
-
     environment:
-      - VIRTUAL_HOST=suport.domain.com
-      - LETSENCRYPT_HOST=suport.domain.com
-      - LETSENCRYPT_EMAIL=contact@domain.com
       - MYSQL_ROOT_PASSWORD=Mysql@2021
       - TIMEZONE=America/Bahia
     restart: always
@@ -203,22 +164,22 @@ services:
       # sudo mkdir -p /var/docker/graylog/elasticsearch/data
       # chmod 777 /var/docker/graylog/elasticsearch/data
 #      - /var/docker/graylog/elasticsearch/data:/usr/share/elasticsearch/data  
-  
+#  
 #  graylog:
 #    image: graylog/graylog:4.1    
 #    restart: always    
 #    environment:
-#      - VIRTUAL_HOST=logs.domain.com     
+#      - VIRTUAL_HOST=logs.ctsnetworks.com.br     
 #      - VIRTUAL_PORT=9000
 #      - LETSENCRYPT_HOST=logs.domains.com      
-#      - LETSENCRYPT_EMAIL=contact@domain.com
+#      - LETSENCRYPT_EMAIL=mauricio@t3tecnologia.com.br
       # Pass with 16 digits     
-#      - GRAYLOG_PASSWORD_SECRET=senha@2021@agoravai
+      # - GRAYLOG_PASSWORD_SECRET=senha@2021@agoravai
       # Password Admin
       # echo -n password | shasum -a 256
 #      - GRAYLOG_ROOT_PASSWORD_SHA2=498d052d06f5fc8247d1964bd8257448c1dec61e8304ab6b2f62290beb3eb500      
 #      - GRAYLOG_HTTP_EXTERNAL_URI=https://logs.ctsnetworks.com.br/
-#     - GRAYLOG_WEB_ENDPOINT_URI=http://logs.ctsnetworks.com.br/api    
+      # - GRAYLOG_WEB_ENDPOINT_URI=http://logs.ctsnetworks.com.br/api    
 #    entrypoint: /usr/bin/tini -- wait-for-it elasticsearch:9200 --  /docker-entrypoint.sh
 #    volumes:           
 #      - graylog:/usr/share/graylog/data/journal
@@ -238,6 +199,7 @@ services:
   grafana:
     image: grafana/grafana
     restart: always
+    container_name: grafana
     volumes:
       # sudo mkdir -p /var/docker/grafana/data
       # sudo chown -R 472:472 /var/docker/grafana/data
@@ -245,10 +207,6 @@ services:
       - /var/docker/grafana/data:/var/lib/grafana
       - ./grafana/provisioning/:/etc/grafana/provisioning/
     environment:
-      - VIRTUAL_HOST=grafana.domain.com
-      - VIRTUAL_PORT=3000
-      - LETSENCRYPT_HOST=grafana.domain.com
-      - LETSENCRYPT_EMAIL=contact@domain.com
       - GF_INSTALL_PLUGINS=alexanderzobnin-zabbix-app
     healthcheck:
       test: ["CMD-SHELL", "wget --quiet --tries=1 --spider http://localhost:3000/login || exit 1"]
@@ -261,7 +219,6 @@ services:
     labels:
       org.label-schema.group: "monitoring"
 
-### SIP MONITORING ### 
   prometheus:
     image: prom/prometheus:latest
     container_name: prometheus
@@ -321,12 +278,10 @@ services:
   loki:
     image: grafana/loki
     container_name: loki
-    environment:
-      - VIRTUAL_HOST=loki.domain.com
-      - VIRTUAL_PORT=3100
-      - LETSENCRYPT_HOST=loki.domain.com
-      - LETSENCRYPT_EMAIL=contact@domain.com
     restart: unless-stopped
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
     expose:
       - 3100
     ports:
@@ -361,8 +316,8 @@ services:
       - "HEPLIFYSERVER_LOGLVL=info"
       - "HEPLIFYSERVER_LOGSTD=true"
       - "HEPLIFYSERVER_PROMADDR=0.0.0.0:9096"
-#      - "HEPLIFYSERVER_PROMTARGETIP=127.0.0.1"
-#      - "HEPLIFYSERVER_PROMTARGETNAME=local"
+#     - "HEPLIFYSERVER_PROMTARGETIP=127.0.0.1"
+#     - "HEPLIFYSERVER_PROMTARGETNAME=local"
       - "HEPLIFYSERVER_DEDUP=false"
       - "HEPLIFYSERVER_LOKIURL=http://loki:3100/api/prom/push"
       - "HEPLIFYSERVER_LOKITIMER=2"
@@ -380,21 +335,14 @@ services:
     container_name: homer-webapp
     image: sipcapture/webapp
     environment:
-      - VIRTUAL_HOST=homer.domain.com
-      - VIRTUAL_PORT=9080
-      - LETSENCRYPT_HOST=homer.domain.com
-      - LETSENCRYPT_EMAIL=contact@domain.com
       - "LOKI_HOST=loki"
       - "PROM_HOST=prometheus"
       - "DB_HOST=psql"
       - "DB_USER=root"
       - "DB_PASS=homerSeven"
     restart: unless-stopped
-    ports:
-      - "9080:80"
-    networks:
-      - proxy-tier
-      - default
+    #ports:
+    #  - "9080:80"
     volumes:
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
@@ -402,7 +350,10 @@ services:
     depends_on:
       - psql
       - grafana
-  
+    networks:
+      - proxy-tier
+      - default
+
   psql:
     container_name: psql
     image: postgres:11-alpine
@@ -425,17 +376,13 @@ services:
       retries: 30
     depends_on:
       - grafana
-
+  
   remotely:
     image: translucency/remotely:latest
+    container_name: remotely
     restart: always
-    ports:
-      - "5000:5000"
-    environment:
-      - VIRTUAL_HOST=remote.domain.com
-      - VIRTUAL_PORT=5000
-      - LETSENCRYPT_HOST=remote.domain.com
-      - LETSENCRYPT_EMAIL=contact@domain.com
+    #ports:
+    #  - "5000:5000"
     volumes:
       - /var/www-docker/remotely:/remotely-data
     networks:
@@ -443,29 +390,65 @@ services:
       - default
 
   meshcentral:
-    restart: always
     image: einar/meshcentral
-    ports:
-      - 8086:443  #MeshCentral will moan and try everything not to use port 80, but you can also use it if you so desire, just change the config.json according to your needs
+    container_name: meshcentral
+    restart: always
+ #   ports:
+ #     - 8086:443 
     environment:
-      - VIRTUAL_HOST=remote.domain.com
-      - VIRTUAL_PORT=8086
-      - LETSENCRYPT_HOST=remote.domain.com
-      - LETSENCRYPT_EMAIL=contact@domain.com
-      - HOSTNAME=my.domain.com     #your hostname
-      - REVERSE_PROXY=false     #set to your reverse proxy IP if you want to put meshcentral behind a reverse proxy
-      - REVERSE_PROXY_TLS_PORT=
-      - IFRAME=false    #set to true if you wish to enable iframe support
-      - ALLOW_NEW_ACCOUNTS=true    #set to false if you want disable self-service creation of new accounts besides the first (admin)
-      - WEBRTC=false  #set to true to enable WebRTC - per documentation it is not officially released with meshcentral, but is solid enough to work with. Use with caution
-      - ALLOWPLUGINS=false #set to true to allow plugins
-      - LOCALSESSIONRECORDING=false # set to true to allow session recording
-      - MINIFY=true #set to enable or disable minification of json, reduces traffic
-    depends_on:
-      - proxy
+      - HOSTNAME=remote.ctsnetworks.com.br
+      - REVERSE_PROXY=pxymng     
+      - REVERSE_PROXY_TLS_PORT=443
+      - IFRAME=false
+      - ALLOW_NEW_ACCOUNTS=true
+      - WEBRTC=true
+      - ALLOWPLUGINS=true
+      - LOCALSESSIONRECORDING=false
+      - MINIFY=true
     volumes:
-      - /var/www-docker/meshcentral/data:/opt/meshcentral/meshcentral-data    #config.json and other important files live here. A must for data persistence
-      - /var/www-docker/meshcentral/user_files:/opt/meshcentral/meshcentral-files    #where file uploads for users live
+      - /var/www-docker/meshcentral/data:/opt/meshcentral/meshcentral-data   
+      - /var/www-docker/meshcentral/user_files:/opt/meshcentral/meshcentral-files 
+    networks:
+      - proxy-tier
+      - default
+
+  pxymng:
+    image: 'jc21/nginx-proxy-manager:latest'
+    container_name: pxymng
+    restart: unless-stopped
+    ports:
+      - '80:80'
+      - '81:81'
+      - '443:443'
+    environment:
+      DB_MYSQL_HOST: "db"
+      DB_MYSQL_PORT: 3306
+      DB_MYSQL_USER: "root"
+      # DB_MYSQL_PASSWORD: "npm"  # use secret instead
+      DB_MYSQL_PASSWORD: "Mysql@2021"
+      DB_MYSQL_NAME: "npm"  
+
+    volumes:
+      - ./data:/data
+      - ./letsencrypt:/etc/letsencrypt
+
+  homerdash:
+    image: b4bz/homer:latest
+    container_name: homerdash
+    restart: always
+    volumes:
+      - /var/www-docker/homerdash/www/assets/>:/www/assets 
+    environment:
+      - UID=1000
+      - GID=1000
+
+  portainer:
+    image: portainer/portainer
+    container_name: portainer
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/www-docker/portainer:/data
 
 # VOLUMES 
 volumes:
