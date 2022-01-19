@@ -398,6 +398,18 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - /var/www-docker/portainer:/data
 
+  baculum-web:
+    image: fametec/baculum-web:11.0.5
+    container_name: baculum-web
+    restart: unless-stopped
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - ./etc/bconsole.conf:/opt/bacula/etc/bconsole.conf:ro
+      - ./etc/baculum:/etc/baculum:rw
+    #ports:
+    #  - 9095:9095
+
 # VOLUMES 
 volumes:
   prometheus_data:
