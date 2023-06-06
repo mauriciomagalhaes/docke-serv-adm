@@ -14,6 +14,58 @@ services:
     env_file:
       - db.env
 
+  redis:
+    image: redis:alpine
+    container_name: redis
+    restart: always
+
+# NEXTCLOUD
+  nextcloud:
+    build: ./nextcloud
+    container_name: nextcloud
+    restart: always
+    volumes:
+      - /var/www-docker/nextcloud:/var/www/html
+    environment:
+      - MYSQL_HOST=db
+      - REDIS_HOST=redis
+    env_file:
+      - db.env
+    depends_on:
+      - db
+      - redis
+    networks:
+      - proxy-tier
+      - default
+
+# COLLABORA
+  collabora:    
+    image: collabora/code
+    container_name: collabora
+    restart: always
+#   ports:
+#     - 9980:9980
+    environment:
+#     - username=admin
+#     - password=agoravai@2020
+#     - extra_params=--o:ssl.enable=false
+      - dictionaries=pt_BR
+      - domain=office.ctsnetworks.com.br
+    networks:
+      - proxy-tier
+
+#CRON
+  cron:
+    image: nextcloud:apache
+    container_name: cron
+    restart: always
+    volumes:
+      - /var/www-docker/nextcloud:/var/www/html
+    entrypoint: /cron.sh
+    depends_on:
+      - db
+      - redis
+
 # ZABBIX-SERVER
   zbx-server:
     image: zabbix/zabbix-server-mysql:ol-5.0-latest
@@ -92,6 +144,57 @@ services:
     networks:
       - proxy-tier
       - default
+
+# GRAYLOG
+#  mongo:
+#    image: mongo:4.2
+#    restart: always
+#    volumes:
+#      - /var/docker/graylog/mongo/data:/data/db
+#
+#  elasticsearch:
+#    image:  docker.elastic.co/elasticsearch/elasticsearch:7.13.1
+#    restart: always
+#    environment:
+#      - http.host=0.0.0.0
+#      - transport.host=localhost
+#      - ES_JAVA_OPTS=-Xms512m -Xmx512m      
+#      - discovery.type=single-node    
+#    volumes:
+#      # sudo mkdir -p /var/docker/graylog/elasticsearch/data
+#      # chmod 777 /var/docker/graylog/elasticsearch/data
+#      - /var/docker/graylog/elasticsearch/data:/usr/share/elasticsearch/data  
+#  
+#  graylog:
+#    image: graylog/graylog:4.1    
+#    restart: always    
+#    environment:
+#      - VIRTUAL_HOST=logs.ctsnetworks.com.br     
+#      - VIRTUAL_PORT=9000
+#      - LETSENCRYPT_HOST=logs.domains.com      
+#      - LETSENCRYPT_EMAIL=mauricio@t3tecnologia.com.br
+#     # Pass with 16 digits     
+      # - GRAYLOG_PASSWORD_SECRET=senha@2021@agoravai
+      # Password Admin
+      # echo -n password | shasum -a 256
+#      - GRAYLOG_ROOT_PASSWORD_SHA2=498d052d06f5fc8247d1964bd8257448c1dec61e8304ab6b2f62290beb3eb500      
+#      - GRAYLOG_HTTP_EXTERNAL_URI=https://logs.ctsnetworks.com.br/
+      # - GRAYLOG_WEB_ENDPOINT_URI=http://logs.ctsnetworks.com.br/api    
+#    entrypoint: /usr/bin/tini -- wait-for-it elasticsearch:9200 --  /docker-entrypoint.sh
+#    volumes:           
+#      - graylog:/usr/share/graylog/data/journal
+#      - /var/docker/graylog/plugin:/usr/share/graylog/plugin    
+#    ports:      
+#      - 1514:1514        # SYSLOG TCP
+#      - 1514:1514/udp    # SYSLOG UDP
+#      - 12201:12201      # GELF   TCP
+#      - 12201:12201/udp  # GELP   UDP  
+#    links:      
+#      - mongo
+#      - elasticsearch    
+#    networks:      
+#      - proxy-tier
+#      - default
 
   grafana:
     image: grafana/grafana
@@ -254,13 +357,12 @@ services:
   psql:
     container_name: psql
     image: postgres:11-alpine
-    restart: always
+    restart: unless-stopped
     environment:
       POSTGRES_PASSWORD: homerSeven
       POSTGRES_USER: root
     expose:
       - 5432
-    
     volumes:
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
@@ -273,6 +375,41 @@ services:
       retries: 30
     depends_on:
       - grafana
+  
+  remotely:
+    image: translucency/remotely:latest
+    container_name: remotely
+    restart: always
+    #ports:
+    #  - "5000:5000"
+    volumes:
+      - /var/www-docker/remotely:/remotely-data
+    networks:
+      - proxy-tier
+      - default
+
+  meshcentral:
+    image: einar/meshcentral
+    container_name: meshcentral
+    restart: always
+ #   ports:
+ #     - 8086:443 
+    environment:
+      - HOSTNAME=remote.ctsnetworks.com.br
+      - REVERSE_PROXY=pxymng     
+      - REVERSE_PROXY_TLS_PORT=443
+      - IFRAME=false
+      - ALLOW_NEW_ACCOUNTS=true
+      - WEBRTC=true
+      - ALLOWPLUGINS=true
+      - LOCALSESSIONRECORDING=false
+      - MINIFY=true
+    volumes:
+      - /var/www-docker/meshcentral/data:/opt/meshcentral/meshcentral-data   
+      - /var/www-docker/meshcentral/user_files:/opt/meshcentral/meshcentral-files 
+    networks:
+      - proxy-tier
+      - default
 
   pxymng:
     image: 'jc21/nginx-proxy-manager:latest'
@@ -315,9 +452,11 @@ services:
 volumes:
   prometheus_data:
   db:
+  nextcloud:
   certs:
   vhost.d:
   html:
+  graylog:
 
 networks:
   proxy-tier:
